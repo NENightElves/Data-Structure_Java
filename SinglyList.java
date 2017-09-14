@@ -1,41 +1,17 @@
-import java.awt.Font;
-
-import javax.swing.text.DefaultEditorKit.InsertBreakAction;
-import javax.xml.soap.Node;
-
-public class Node<T>
-{
-    public T data;
-    public Node<T> next;
-
-    public Node(T data, Node<T> next)
-    {
-        this.data = data;
-        this.next = next;
-    }
-
-    public Node()
-    {
-        this(null, null);
-    }
-
-    public String toString()
-    {
-        return this.data.toString();
-    }
-}
-
 public class SinglyList<T> extends Object
 {
+
     public Node<T> head;
 
-    public SinglyList()                                                         //锟斤拷锟届方锟斤拷
+    public SinglyList()
     {
+
         this.head = new Node<T>();
     }
 
     public SinglyList(T[] values)
     {
+
         this();
         Node<T> rear = this.head;
         for (int i = 0; i < values.length; i++)
@@ -45,35 +21,64 @@ public class SinglyList<T> extends Object
         }
     }
 
+    public SinglyList(SinglyList<T> list)
+    {
+
+        this();
+        Node<T> rear = this.head;
+        for (Node<T> p = list.head.next; p != null; p = p.next)
+        {
+            rear.next = new Node<T>(p.data, null);
+            rear = rear.next;
+        }
+    }
+
     public boolean isEmpty()
     {
+
         return this.head.next == null;
     }
 
-    public T get(int i)                                                          //锟斤拷取
+    public T get(int i)
     {
+
         Node<T> p = this.head.next;
         for (int j = 0; p != null && j < i; j++)
             p = p.next;
-        return (i > 0 && p != null) ? p.data : null;
+        return (i >= 0 && p != null) ? p.data : null;
     }
 
     public void set(int i, T x)
     {
+
         if (x == null)
-            throw new NullPointerException("x==null");     //抛出空对象异常
-        if (i >= 0 && i < this.n)
-            this.element[i] = x;
-        else throw new java.lang.IndexOutOfBoundsException(i + "");//抛出序号越界异常
+            throw new NullPointerException("x == null");
+        Node<T> p = this.head.next;
+        int j = 0;
+        while (p != null && j != i)
+        {
+            p = p.next;
+            j++;
+        }
+        p.data = x;
     }
 
-    public int size()                                      //返回顺序表元素个数，O(1)
+    public int size()
     {
-        return this.n;
+
+        Node<T> p = this.head.next;
+        int size = 0;
+        while (p.next != null)
+        {
+            p = p.next;
+            size++;
+        }
+        return size;
     }
 
     public String toString()
     {
+
         String str = this.getClass().getName() + "(";
         for (Node<T> p = this.head.next; p != null; p = p.next)
         {
@@ -84,10 +89,11 @@ public class SinglyList<T> extends Object
         return str + ")";
     }
 
-    public Node<T> insert(int i, T x)                                             //锟斤拷锟斤拷
+    public Node<T> insert(int i, T x)
     {
+
         if (x == null)
-            throw new NullPointerException("x==null");
+            throw new NullPointerException("x == null");
         Node<T> front = this.head;
         for (int j = 0; front.next != null && j < i; j++)
             front = front.next;
@@ -97,11 +103,13 @@ public class SinglyList<T> extends Object
 
     public Node<T> insert(T x)
     {
-        return Insert(Integer.MAX_VALUE, x);
+
+        return insert(Integer.MAX_VALUE, x);
     }
 
-    public T remove(int i)                                                       //删锟斤拷
+    public T remove(int i)
     {
+
         Node<T> front = this.head;
         for (int j = 0; front.next != null && j < i; j++)
             front = front.next;
@@ -109,7 +117,21 @@ public class SinglyList<T> extends Object
         {
             T old = front.next.data;
             front.next = front.next.next;
+            return old;
+        }
+        return null;
+    }
 
+    public T remove(T key, int n)
+    {
+
+        Node<T> front = this.head;
+        while (front.next != null && !key.equals(front.next.data))
+            front = front.next;
+        if (front.next != null)
+        {
+            T old = front.next.data;
+            front.next = front.next.next;
             return old;
         }
         return null;
@@ -117,36 +139,37 @@ public class SinglyList<T> extends Object
 
     public void clear()
     {
+
         this.head.next = null;
     }
 
-    public int search(T key)
+    public boolean equals(SinglyList<T> list)
     {
-        for (int i = 0; i < this.n; i++)
+        Node<T> p = this.head.next;
+        Node<T> q = list.head.next;
+        while (p.data == q.data)
         {
-            if (key.equals(this.element[i]))
-                return i;
+            p = p.next;
+            q = q.next;
         }
-        return -1;
+        if (p == null)
+            return true;
+        else
+            return false;
     }
 
-    public boolean contains(T key)
-    {
-        return this.search(key) != -1;
-    }
+    /*public void reverse(){
 
-    public boolean isDifferent()
-    {
-        for (int i = 0; i < this.n; i++)
-            for (int j = 0; j < i; j++)
-                if (this.element[j].equals(this.element[i]))
-                    return false;
-        return true;
-    }
+        Node<T> front = this.head;
+        Node<T> p = this.head.next;
+        Node<T> succ = p.next;
+        while (p!=null){
+            p.next = front;
+            p = succ;
+            succ = succ.next;
+            front = p;
+        }
+        head = front;
+    }*/
 
-    public T remove(T key)
-    {
-        return this.remove(this.search(key));
-    }
 }
-
