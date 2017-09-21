@@ -183,6 +183,42 @@ public class SinglyList<T> extends Object
             return false;
     }
 
+    public void replaceAll(SinglyList<T> pattern, SinglyList<T> list)
+    {
+        Node<T> p, q, pt, i;
+        SinglyList<T> tmp;
+        p = this.head;
+        pt = this.head;
+        q = pattern.head;
+        p = p.next;
+        q = q.next;
+        while (p != null)
+        {
+            while ((p != null) && (q != null) && (p.data.equals(q.data)))
+            {
+                p = p.next;
+                q = q.next;
+            }
+            if (q == null)
+            {
+                tmp = new SinglyList(list);
+                i = list.head;
+                pt.next = i.next;
+                while (i.next != null)
+                    i = i.next;
+                i.next = p;
+                q = pattern.head.next;
+                pt = i;
+                list = tmp;
+            } else
+            {
+                q = pattern.head.next;
+                pt = pt.next;
+                p = pt.next;
+            }
+        }
+    }
+
     /*public void reverse(){
 
         Node<T> front = this.head;
